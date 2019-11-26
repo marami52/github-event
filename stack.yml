@@ -1,0 +1,24 @@
+version: 1.0
+provider:
+  name: openfaas
+  gateway: http://127.0.0.1:8080
+functions:
+  system-github-event:
+    lang: go
+    handler: ./github-event
+    image: functions/github-event:0.8.1
+    labels:
+      openfaas-cloud: "1"
+      role: openfaas-system
+      com.openfaas.scale.zero: false
+    environment:
+      validate_hmac: true
+      write_debug: true
+      read_debug: true
+      validate_customers: true
+    environment_file:
+      - github.yml
+      - gateway_config.yml
+    secrets:
+      - github-webhook-secret
+      - payload-secret
